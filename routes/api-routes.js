@@ -22,5 +22,15 @@ module.exports = function(app) {
         } catch (error) {
             console.log(erro);
         }
+    });
+
+    app.delete("/api/notes/:id", async function(req, res) {
+        try {
+            const db = await asyncReadFile("./db/db.json", "utf-8");
+            dbParsed = JSON.parse(db);
+
+        } catch (error) {
+            console.log(error);
+        }
     })
 }
