@@ -2,12 +2,15 @@ const util = require('util');
 const fs = require("fs");
 
 const asyncReadFile = util.promisify(fs.readFile);
+const asyncWriteFile = util.promisify(fs.writeFile);
 
 module.exports = function(app) {
+
     app.get("/api/notes", async function(req, res) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
-            res.json(db);
+            const parsedDB = JSON.parse(db);
+            res.json(parsedDB);
         } catch (error) {
             console.log(error);
         }
@@ -19,8 +22,10 @@ module.exports = function(app) {
             dbParsed = JSON.parse(db);
             dbParsed.push(req.body);
             console.log(dbParsed);
+            await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
+            res.json(dbParsed);
         } catch (error) {
-            console.log(erro);
+            console.log(error);
         }
     });
 
