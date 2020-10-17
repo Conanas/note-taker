@@ -20,10 +20,13 @@ module.exports = function(app) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
             dbParsed = JSON.parse(db);
-            dbParsed.push(req.body);
-            console.log(dbParsed);
+            if (dbParsed.length === "") {
+                req.body.id = 1;
+            } else {
+                req.body.id = dbParsed.length + 1;
+            }
             await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
-            res.json(dbParsed);
+            res.json(req.body);
         } catch (error) {
             console.log(error);
         }
