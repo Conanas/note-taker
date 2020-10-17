@@ -1,5 +1,6 @@
 const util = require('util');
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 const asyncReadFile = util.promisify(fs.readFile);
 const asyncWriteFile = util.promisify(fs.writeFile);
@@ -19,13 +20,10 @@ module.exports = function(app) {
     app.post("/api/notes", async function(req, res) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
+            const id = uuidv4();
             dbParsed = JSON.parse(db);
-            if (dbParsed.length === "") {
-                req.body.id = 1;
-            } else {
-                req.body.id = dbParsed.length + 1;
-                dbParsed.push(req.body);
-            }
+            req.body.id = id;
+            dbParsed.push(req.body);
             await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
             res.json(req.body);
         } catch (error) {
@@ -36,8 +34,8 @@ module.exports = function(app) {
     app.delete("/api/notes/:id", async function(req, res) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
+            const id = req.params.id;
             dbParsed = JSON.parse(db);
-            const id = parseInt(req.params.id);
             dbParsed.forEach(item => {
                 if (item.id === id) {
                     dbParsed.splice(dbParsed.indexOf(item), 1);
