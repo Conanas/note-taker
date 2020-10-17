@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 require("./routes/api-routes")(app);
 require("./routes/html-routes")(app);
 
-// server activation
+// server actived to listen for calls
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
 })
