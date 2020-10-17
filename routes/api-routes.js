@@ -11,6 +11,7 @@ module.exports = function(app) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
             const parsedDB = JSON.parse(db);
+
             res.json(parsedDB);
         } catch (error) {
             console.log(error);
@@ -21,9 +22,11 @@ module.exports = function(app) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
             const id = uuidv4();
-            dbParsed = JSON.parse(db);
+
             req.body.id = id;
+            dbParsed = JSON.parse(db);
             dbParsed.push(req.body);
+
             await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
             res.json(req.body);
         } catch (error) {
@@ -35,6 +38,7 @@ module.exports = function(app) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
             const id = req.params.id;
+
             dbParsed = JSON.parse(db);
             dbParsed.forEach(item => {
                 if (item.id === id) {
@@ -42,6 +46,7 @@ module.exports = function(app) {
                     return;
                 }
             });
+
             await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
             res.json(req.body);
         } catch (error) {
