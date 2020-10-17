@@ -37,7 +37,15 @@ module.exports = function(app) {
         try {
             const db = await asyncReadFile("./db/db.json", "utf-8");
             dbParsed = JSON.parse(db);
-
+            const id = parseInt(req.params.id);
+            dbParsed.forEach(item => {
+                if (item.id === id) {
+                    dbParsed.splice(dbParsed.indexOf(item), 1);
+                    return;
+                }
+            });
+            await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
+            res.json(req.body);
         } catch (error) {
             console.log(error);
         }
