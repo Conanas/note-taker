@@ -24,6 +24,7 @@ module.exports = function(app) {
                 req.body.id = 1;
             } else {
                 req.body.id = dbParsed.length + 1;
+                dbParsed.push(req.body);
             }
             await asyncWriteFile("./db/db.json", JSON.stringify(dbParsed, null, 2));
             res.json(req.body);
